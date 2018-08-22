@@ -1,0 +1,78 @@
+language: php
+# We want to avoid sudo. This allow us to use Travis docker infrastructure, which means builds start faster and have more CPU available.
+sudo: false
+
+git:
+  depth: 1
+
+php:
+  - '7.1'
+
+branches:
+  only:
+   - 1.x-1.x
+
+addons:
+  # The username and access key are stored in the Travis settings.
+  sauce_connect: true
+
+services:
+ - mysql
+
+# Cache Composer and db export.
+# I removed caching of Drush since you have to clear Drush cache to get new Drupal versions.
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - $HOME/cache
+
+install:
+
+  # Export variables used later on in the bash scripts.
+  - cd $TRAVIS_BUILD_DIR && cd ../ && export ROOT_DIR=$(pwd)
+  - export HOME
+  - export TRAVIS_EVENT_TYPE
+
+  # Name of bundle used as a placeholder in scripts.
+  - export MODULE_NAME="highlightjs_wysiwyg"
+  - export ADD_CUSTOM_MODULES="backdrop_test_users"
+  - export ADD_CONTRIB_MODULES="shortcode google_cse"
+
+  # Behat tags. Allows you to include/exclude tags per bundle as needed.
+  - export EXPRESS_JS_BEHAT_TAGS="~@exclude_all_bundles&&~@broken&&@javascript"
+  - export EXPRESS_HEADLESS_BEHAT_TAGS="~@exclude_all_bundles&&~@broken&&~@javascript"
+  - export BUNDLE_BEHAT_TAGS="~@exclude_all_bundles&&~@broken"
+
+  # SimpleTest group.
+  - export SIMPLETEST_CLASSES="HighlightJSTests"
+
+  # Copy scripts to root.
+  - cd ${ROOT_DIR}
+  - cp -R ${ROOT_DIR}/${MODULE_NAME}/tests/travis-ci/* ${ROOT_DIR}
+
+  # Pulls in any helper functions used later in scripts.
+  - source $ROOT_DIR/helper-functions.sh
+
+  # Install and build dependencies.
+  - echo "Running install script..."
+  - $ROOT_DIR/build-code.sh
+
+before_script:
+
+  # Setup config for PHP/MySQL, settings.php, and install database.
+  - echo "Running setup script..."
+  - $ROOT_DIR/setup-config.sh
+
+  # Perform the site install after removing Xdebug since it seems faster.
+  - echo "Running build script..."
+  - $ROOT_DIR/install-backdrop.sh
+
+script:
+
+  # Run Behat tests.
+  - echo "Running Behat tests..."
+  - $ROOT_DIR/run-behat-tests.sh
+
+  # Run SimpleTests.
+  - echo "Running SimpleTest tests..."
+  - $ROOT_DIR/run-simpletests.sh
