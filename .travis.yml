@@ -39,9 +39,8 @@ install:
   - export ADD_CONTRIB_MODULES="shortcode google_cse"
 
   # Behat tags. Allows you to include/exclude tags per bundle as needed.
-  - export EXPRESS_JS_BEHAT_TAGS="~@exclude_all_bundles&&~@broken&&@javascript"
-  - export EXPRESS_HEADLESS_BEHAT_TAGS="~@exclude_all_bundles&&~@broken&&~@javascript"
-  - export BUNDLE_BEHAT_TAGS="~@exclude_all_bundles&&~@broken"
+  - export HEADLESS_BEHAT_TAGS="~@broken&&~@javascript"
+  - export JS_BEHAT_TAGS="~@broken&&@javascript"
 
   # SimpleTest group.
   - export SIMPLETEST_CLASSES="HighlightJSTests"
