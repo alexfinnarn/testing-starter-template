@@ -1,0 +1,5 @@
+[MyModuleTests]
+name = Example SimpleTests
+description = Example SimpleTests for contrib modules.
+group = Examples
+file = my_module.test

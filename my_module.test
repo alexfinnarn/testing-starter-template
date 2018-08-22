@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Unit tests for the xmlsitemap module.
+ *
+ * @ingroup highlightjs_wysiwyg
+ */
+
+/**
+ * Helper test class with some added functions for testing.
+ */
+class MyModuleTests extends BackdropWebTestCase {
+
+  /**
+   * The user object used to login for tests.
+   *
+   * @var object
+   */
+  protected $admin_user;
+
+  /**
+   * Testing by default installs the standard profile, but you can change it.
+   *
+   * @var string
+   */
+  // protected $profile = 'minimal';
+
+  /**
+   * Setup tasks before any of the tests run.
+   *
+   * You can use the setUp() function to enable modules that are needed for the
+   * test run. The modules installed by default will be based off of the install
+   * profile used for tests as defined by the $profile property.
+   *
+   * @param array $modules
+   */
+  function setUp($modules = array()) {
+
+    // You can pass in both the contrib module you are testing as well as other
+    // contrib modules your code depends on.
+    $modules = array(
+      'my_module',
+      'shortcode',
+    );
+    parent::setUp($modules);
+
+    // We create a couple of content types here so that we can create content
+    // later.
+    $this->backdropCreateContentType(array('type' => 'page', 'name' => 'Page'));
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+
+    // We use this user when running tests. It is very important to give the
+    // user all the permissions needed for the test run as the user will have no
+    // permissions by default.
+    $this->admin_user = $this->backdropCreateUser(array(
+      'administer nodes',
+      'bypass node access',
+      'administer content types'
+    ));
+  }
+
+  /**
+   * You can perform actions after the test run.
+   */
+  function tearDown() {
+    // Here we look for errors in the logs and a failure will be reported if any
+    // exist.
+    $this->assertNoWatchdogErrors();
+
+    parent::tearDown();
+  }
+
+  /**
+   * Each test starts with "test" and then the rest of the function name in
+   * camel-case. Try to be descriptive as possible in your test names so you can
+   * quickly know what they are about when reading through later.
+   */
+  function testSomethingGood() {
+    // Set the body field as it is on a node form element. Not ideal, but it
+    // works. The field will later be filled in with a value.
+    // You will need to figure out the structure of the form element you are
+    // trying to fill out by inspecting the DOM.
+    $body_field = 'body[' . LANGUAGE_NONE . '][0][value]';
+
+    // Here we create a node of type page that is unpublished.
+    $node = $this->backdropCreateNode(array(
+      'type' => 'page',
+      'status' => 0,
+      'uid' => $this->admin_user->uid
+    ));
+
+    $this->backdropLogin($this->admin_user);
+
+    // Now we change the title and body field of the node that was created.
+    // Even though the title wasn't originally added $this->backdropCreateNode()
+    // added a title by default using "$this->randomName(8)". It is a good idea
+    // to check inheritied methods so you can leave some defaults and only
+    // change values you need to. This will keep your tests much cleaner than
+    // manually adding every possible value for creating something like a node.
+    $edit = array(
+      'title' => 'Test node title',
+      $body_field => 'Test node body',
+    );
+
+    // To save the node, we POST to the edit endpoint. The "backdropPost" method
+    // has a lot of parameters that you can use but in this case we are only
+    // passing in the path, edit values, and the name of the form submit button.
+    $this->backdropPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // After you perform some action, you usually will assert that something
+    // happened or didn't happen. Asserting that text is on a page is a quite
+    // common assertion to make. If you use an IDE with autocompletion you can
+    // type "$this->>assert" in your IDE to get a good idea of most of the
+    // assertion methods available.
+    $this->assertText('Page Test node title has been updated.');
+  }
+}
