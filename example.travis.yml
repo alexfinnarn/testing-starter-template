@@ -50,7 +50,7 @@ install:
 
   # Copy starter kit scripts to root for cleaner syntax.
   - cd "${ROOT_DIR}"
-  - git clone https://github.com/alexfinnarn/testing-starter-template.git testing
+  - git clone https://github.com/alexfinnarn/testing-starter-scripts.git testing
   - cp -R "${ROOT_DIR}"/testing/tests/travis-ci/* "${ROOT_DIR}"
 
   # Pulls in any helper functions used later in scripts.
