@@ -20,7 +20,14 @@ cd $ROOT_DIR
 echo "Cloning Backdrop repo..."
 git clone --branch 1.x --depth 1 https://github.com/backdrop/backdrop.git ${ROOT_DIR}/backdrop
 
+echo "Copying your module into the modules directory..."
 cp -R ${ROOT_DIR}/${MODULE_NAME} ${ROOT_DIR}/backdrop/modules
+
+echo "Cloning down contrib modules..."
+for i in $(echo ${ADD_CONTRIB_MODULES} | sed "s/ / /g")
+do
+  git clone https://github.com/backdrop-contrib/${i}.git ${ROOT_DIR}/backdrop/modules/${i}
+done
 
 # Setup files? Does this need to happen in Backdrop?
 #mkdir -p $ROOT_DIR/drupal/sites/default/files/styles/preview/public/gallery/ && chmod -R 777 $ROOT_DIR/drupal/sites

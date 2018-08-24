@@ -34,27 +34,27 @@ install:
   - export TRAVIS_EVENT_TYPE
 
   # Name of bundle used as a placeholder in scripts.
-  - export MODULE_NAME="highlightjs_wysiwyg"
-  - export ADD_CUSTOM_MODULES="backdrop_test_users"
-  - export ADD_CONTRIB_MODULES="shortcode google_cse"
+  - export MODULE_NAME=""
+  # - export ADD_CUSTOM_MODULES="backdrop_test_users"
+  # - export ADD_CONTRIB_MODULES=""
 
   # Behat tags. Allows you to include/exclude tags per bundle as needed.
   - export HEADLESS_BEHAT_TAGS="~@broken&&~@javascript"
   - export JS_BEHAT_TAGS="~@broken&&@javascript"
 
   # SimpleTest group.
-  - export SIMPLETEST_CLASSES="HighlightJSTests"
+  - export SIMPLETEST_CLASSES=""
 
   # Copy scripts to root.
   - cd ${ROOT_DIR}
   - cp -R ${ROOT_DIR}/${MODULE_NAME}/tests/travis-ci/* ${ROOT_DIR}
 
   # Pulls in any helper functions used later in scripts.
-  - source $ROOT_DIR/helper-functions.sh
+  - source ${ROOT_DIR}/helper-functions.sh
 
   # Install and build dependencies.
   - echo "Running install script..."
-  - $ROOT_DIR/build-code.sh
+  - ${ROOT_DIR}/build-code.sh
 
 before_script:
 

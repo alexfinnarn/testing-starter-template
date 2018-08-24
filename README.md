@@ -71,15 +71,17 @@ not a developer, it is harder for me to grok what is happening in the test.
 
 To install the starter kit in your contrib module:
 
-1. Grab the latest release.
-2a. Create a `tests` directory in your repo, if there isn't one already, and copy in the tests.
-2b. If there is a `tests` directory, then look for a `your_module.test` file. If there is, then you likely have SimpleTests already written for your
-module. Hooray! You will still need to modify that file based on 
+1. Grab the latest release at...insert final link when repo is transferred.
+2a. Create a `tests` directory in your repo, if there isn't one already, and copy in the unzipped files from the release.
+2b. If there is a `tests` directory, then look for a `your_module.test` file. If there is one or a similar file, then you likely have SimpleTests 
+already written for your module. Hooray! You will still need to modify that file based on 
 [converting a module from Drupal documentation](https://api.backdropcms.org/converting-modules-from-drupal). You can delete the `my_module.test` and
-`my_module.tests.info` files since the already existing files will take their place and functionality.
+`my_module.tests.info` files since the already existing files will take their place and functionality. Copy in all the other files from the unzipped
+release files.
+4. Rename `example.travis.yml` to `.travis.yml` and place that in the root of your module directory.
 3. Change `MODULE_NAME`, `ADD_CUSTOM_MODULES`, and `ADD_CONTRIB_MODULES` to fit your needs. You can modify the `backdrop_test_users` module to add 
 local test users with different roles and different permissions. You will typically want to test the permissions granted in your module, but you will
-likely need to add Backdrop core permissiosn to the users. See config files on a live Backdrop site with `user.role.` as a prefix for examples.
+likely need to add Backdrop core permissions to the users. See config files on a live Backdrop site with `user.role.` as a prefix for examples.
 4. You can also change `HEADLESS_BEHAT_TAGS` and `JS_BEHAT_TAGS` if you want to target your Behat tests in a different way, but leaving them as-is
 will run all of your Behat tests.
 5. Enable Travis CI integration on your project's settings page in the GitHub UI. You can read more about that process here: 
