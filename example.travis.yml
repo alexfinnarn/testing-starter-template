@@ -6,7 +6,7 @@ git:
   depth: 1
 
 php:
-  - '7.1'
+  - '7.2'
 
 branches:
   only:
@@ -33,6 +33,9 @@ install:
   - export HOME
   - export TRAVIS_EVENT_TYPE
 
+  # This variable is used later on to determine if the testing starter template project has been updated.
+  - export TESTING_STARTER_TEMPLATE_VERSION="0.1.0"
+
   # Name of bundle used as a placeholder in scripts.
   - export MODULE_NAME=""
   # - export ADD_CUSTOM_MODULES="backdrop_test_users"
@@ -45,9 +48,10 @@ install:
   # SimpleTest group.
   - export SIMPLETEST_CLASSES=""
 
-  # Copy scripts to root.
+  # Copy starter kit scripts to root for cleaner syntax.
   - cd "${ROOT_DIR}"
-  - cp -R "${ROOT_DIR}"/"${MODULE_NAME}"/tests/travis-ci/* "${ROOT_DIR}"
+  - git clone https://github.com/alexfinnarn/testing-starter-template.git testing
+  - cp -R "${ROOT_DIR}"/testing/tests/travis-ci/* "${ROOT_DIR}"
 
   # Pulls in any helper functions used later in scripts.
   - source "${ROOT_DIR}"/helper-functions.sh
